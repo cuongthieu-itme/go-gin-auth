@@ -1,6 +1,7 @@
 package config
 
 import (
+	"log"
 	"time"
 
 	"github.com/spf13/viper"
@@ -75,11 +76,11 @@ func Load() (*Config, error) {
 	viper.SetDefault("RATE_LIMIT_WINDOW", "1m")
 	viper.SetDefault("BCRYPT_COST", 12)
 
-	// Đọc file .env
+	// Đọc file .env (optional - nếu không có hoặc không đọc được thì skip)
 	if err := viper.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			return nil, err
-		}
+		// Chỉ log warning, không fail app nếu không đọc được .env
+		// Vì trong Docker, ta sử dụng environment variables
+		log.Printf("Could not read .env file (this is fine in Docker): %v", err)
 	}
 
 	// Tạo struct config từ các giá trị đã đọc

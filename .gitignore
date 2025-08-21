@@ -31,6 +31,7 @@ go.work.sum
 .idea/
 *.swp
 *.swo
+*~
 
 # OS generated files
 .DS_Store
@@ -51,3 +52,15 @@ docker-compose.override.yml
 # Temporary files
 tmp/
 temp/
+*.tmp
+
+# Build artifacts
+main
+go-gin-auth
+
+# Test coverage
+coverage.out
+coverage.html
+
+# Air (hot reload) temp files
+tmp/
