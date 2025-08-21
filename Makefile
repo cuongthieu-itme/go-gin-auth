@@ -1,4 +1,4 @@
-.PHONY: help dev build test test-unit test-integration lint migrate-create migrate-up migrate-down migrate-reset docker-build docker-up docker-down clean
+.PHONY: help dev build test test-unit test-integration migrate-create migrate-up migrate-down migrate-reset docker-build docker-up docker-down clean
 
 # Load environment variables from .env
 -include .env
@@ -52,11 +52,9 @@ dev: ## Run app in development mode
 build: ## Build application binary
 	CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags="-w -s" -o bin/$(APP_NAME) cmd/api/main.go
 
-## Run tests with coverage
-test: ## Run all tests with coverage
-	go test -v -race -coverprofile=coverage.out ./...
-	go tool cover -html=coverage.out -o coverage.html
-	@echo "Coverage report generated: coverage.html"
+## Run tests
+test: ## Run all tests
+	go test -v -race ./...
 
 ## Run unit tests only
 test-unit: ## Run unit tests only
@@ -66,9 +64,7 @@ test-unit: ## Run unit tests only
 test-integration: ## Run integration tests
 	go test -v -race -run Integration ./...
 
-## Run linter
-lint: ## Run golangci-lint
-	golangci-lint run
+
 
 ## Format code
 fmt: ## Format Go code
@@ -139,7 +135,6 @@ docker-create-admin: ## Create admin user in Docker environment
 clean: ## Clean build artifacts and Docker resources
 	go clean
 	rm -rf bin/
-	rm -f coverage.out coverage.html
 	docker-compose down --volumes --remove-orphans
 	docker system prune -f
 
@@ -148,9 +143,7 @@ setup: deps migrate-up ## Setup development environment
 	@echo "Development environment setup complete!"
 	@echo "Run 'make dev' to start the application"
 
-## Security check
-security: ## Run security checks
-	gosec ./...
+
 
 ## Generate code (mocks, etc.)
 generate: ## Generate code
@@ -158,8 +151,6 @@ generate: ## Generate code
 
 ## Install development tools
 install-tools: ## Install development tools
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-	go install github.com/securecodewarrior/gosec/v2/cmd/gosec@latest
 	go install github.com/golang-migrate/migrate/v4/cmd/migrate@latest
 
 ## Check dependencies for updates

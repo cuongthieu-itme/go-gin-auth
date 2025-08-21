@@ -58,9 +58,7 @@ temp/
 main
 go-gin-auth
 
-# Test coverage
-coverage.out
-coverage.html
+
 
 # Air (hot reload) temp files
 tmp/
